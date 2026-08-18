@@ -1,14 +1,14 @@
 """API REST del clasificador de mensajes de commit.""" 
-import os 
-import re 
-import time 
-  
-import psycopg2 
-import requests 
-from dotenv import load_dotenv 
-from fastapi import FastAPI, HTTPException 
-from pydantic import BaseModel 
-  
+import os
+import re
+import time
+
+import psycopg2
+import requests
+from dotenv import load_dotenv
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+
 load_dotenv() 
   
 app = FastAPI(title="Clasificador de commits", version="1.0.0") 
