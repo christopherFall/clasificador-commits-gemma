@@ -85,14 +85,14 @@ class Peticion(BaseModel):
     motor: str | None = None 
   
   
-@app.get("/health") 
-def health(): 
-    """Indica si el servicio y la base de datos estan disponibles.""" 
-    try: 
-        with conexion() as con, con.cursor() as cur: 
-            cur.execute("SELECT 1") 
-        return {"estado": "ok", "base_datos": "ok"} 
-    except Exception: 
+@app.get("/health")
+def health():
+    """Indica si el servicio y la base de datos estan disponibles."""
+    try:
+        with conexion() as con, con.cursor() as cur:
+            cur.execute("SELECT 1")
+        return {"estado": "ok", "base_datos": "ok"}
+    except psycopg2.Error:  # Captura únicamente errores de la BD
         raise HTTPException(status_code=503, detail="Base de datos no disponible") 
   
   
