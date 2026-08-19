@@ -2,32 +2,32 @@
 
 ## Diagrama de Arquitectura
 
-+-----------------------------------------------------------------------+
-|                            CAPA DE CLIENTE                            |
-|             [ Navegador Web / Postman / Pruebas de Carga k6 ]         |
-+-----------------------------------------------------------------------+
-                                   |
-                                   | HTTP GET / POST (Puerto 8000)
-                                   v
-+-----------------------------------------------------------------------+
-|                       CONTENEDOR / SERVICIO API                       |
-|                       FastAPI (Puerto 8000)                           |
-|                                                                       |
-|   +---------------------------------------------------------------+   |
-|   |                       MOTOR ECO (Interno)                     |   |
-|   |          Evaluación mediante Expresiones Regulares            |   |
-|   +---------------------------------------------------------------+   |
-+-----------------------------------------------------------------------+
-                |                                       |
-                | HTTP /api/generate                    | TCP / SQL
-                | (Puerto 11434)                        | (Puerto 5432)
-                v                                       v
-+-------------------------------+       +-------------------------------+
-|      MOTOR DE INFERENCIA      |       |         BASE DE DATOS         |
-|      Servidor Ollama          |       |     PostgreSQL 16 Alpine      |
-|    (Puerto 11434)             |       |        (Puerto 5432)          |
-|  Modelo: gemma3:270m          |       |    Base de datos: iadb       |
-+-------------------------------+       +-------------------------------+
++-----------------------------------------------------------------+
+|                         CAPA DE CLIENTE                         |
+|         [ Navegador Web / Postman / Pruebas de Carga k6 ]       |
++-----------------------------------------------------------------+
+                                 |
+                                 | HTTP GET / POST (Puerto 8000)
+                                 v
++-----------------------------------------------------------------+
+|                    CONTENEDOR / SERVICIO API                    |
+|                      FastAPI (Puerto 8000)                      |
+|                                                                 |
+|   +---------------------------------------------------------+   |
+|   |                   MOTOR ECO (Interno)                   |   |
+|   |        Evaluación mediante Expresiones Regulares        |   |
+|   +---------------------------------------------------------+   |
++-----------------------------------------------------------------+
+                 |                               |
+                 | HTTP /api/generate            | TCP / SQL
+                 | (Puerto 11434)                | (Puerto 5432)
+                 v                               v
++-------------------------------+   +-------------------------------+
+|      MOTOR DE INFERENCIA      |   |         BASE DE DATOS         |
+|      Servidor Ollama          |   |     PostgreSQL 16 Alpine      |
+|       (Puerto 11434)          |   |         (Puerto 5432)         |
+|    Modelo: gemma3:270m        |   |      Base de datos: iadb      |
++-------------------------------+   +-------------------------------+
 
 ## Seguridad
 

@@ -28,8 +28,8 @@ Cristian David Ramirez Perez
 
 1. **Actualizar el sistema e instalar dependencias base:**
 
-´sudo apt update && sudo apt upgrade -y´
-´sudo apt install -y git python3 python3-pip python3-venv curl´
+`sudo apt update && sudo apt upgrade -y`
+`sudo apt install -y git python3 python3-pip python3-venv curl`
 
 2. **Clonar el repositorio:**
 
@@ -75,6 +75,7 @@ MOTOR_POR_DEFECTO=
 1. Probar Endpoint `/health`:
 
 `curl -X GET "http://localhost:8000/health"`
+
 *Respuesta esperada*
 > {
 >  "estado": "ok",
@@ -84,9 +85,11 @@ MOTOR_POR_DEFECTO=
 2. Probar Endpoint `/clasificar`:
 
 **MOTOR ECO**
+
 `curl -X POST "http://localhost:8000/clasificar" \`
      `-H "Content-Type: application/json" \`
      `-d '{"texto": "corrige el error de login", "motor": "eco"}'`
+
 *Respuesta esperada*
 > {
 >   "tipo": "fix",
@@ -100,6 +103,7 @@ MOTOR_POR_DEFECTO=
 3. Probar Endpoint `/inferencias`
 
 `curl -X GET "http://localhost:8000/inferencias?limite=5"`
+
 *Respuesta esperada*
 > Lista en formato JSON con los registros parseados desde PostgreSQL.
 
