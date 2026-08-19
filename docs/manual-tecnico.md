@@ -1,6 +1,6 @@
 # MANUAL TÉCNICO
 
-## Arquitectura
+## Diagrama de Arquitectura
 
 +-----------------------------------------------------------------------+
 |                            CAPA DE CLIENTE                            |

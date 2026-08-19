@@ -106,6 +106,7 @@ MOTOR_POR_DEFECTO=
 ## Solución de Problemas
 
 1. Permiso denegado al interactuar con Docker
+
 `permission denied while trying to connect to the Docker daemon socket`
 *Causa:* El usuario de Linux no pertenece al grupo con privilegios para interactuar con el socket de Docker (/var/run/docker.sock).
 *Solución:* 
@@ -114,6 +115,7 @@ MOTOR_POR_DEFECTO=
 > `newgrp docker`
 
 2. Advertencia del Linter BLE001 por Captura Genérica de Excepciones
+
 `BLE001: Do not catch blind exception: Exception`
 *Causa:* Uso de `except Exception:` genérico en bloques de captura de errores, lo cual puede enmascarar fallos imprevistos del sistema.
 *Solución:* Reemplazar la excepción genérica por la excepción específica del conector de la base de datos:
@@ -129,6 +131,7 @@ MOTOR_POR_DEFECTO=
 > 
 
 3. Error HTTP 503 Service Unavailable durante Ejecución de Pruebas Unitarias
+
 `AssertionError: assert 503 == 200` al ejecutar `pytest`
 *Causa:* El endpoint `/health` intenta conectarse a PostgreSQL real en `localhost`, pero la base de datos no está activa o las variables de entorno de red difieren en el entorno de pruebas.
 *Solución:* Implementar simulación (mocking) de la conexión en tests/test_api.py para aislar las pruebas unitarias:
@@ -146,6 +149,7 @@ MOTOR_POR_DEFECTO=
 >         assert r.status_code == 200
 
 4. Fallo de Módulo No Encontrado al Ejecutar Pytest
+
 `ModuleNotFoundError: No module named 'app'`
 *Causa:* `pytest` no añade automáticamente el directorio raíz del proyecto al `sys.path` de Python.
 *Solución:* Crear un archivo `pytest.ini` en la raíz del proyecto con la siguiente directiva:
@@ -154,6 +158,7 @@ MOTOR_POR_DEFECTO=
 > pythonpath = .
 
 5. Error JSONDecodeError en Script de Caracterización de Latencia
+
 `requests.exceptions.JSONDecodeError: Expecting value: line 1 column 1 (char 0)` al ejecutar `caracterizar_modelo.py`
 *Causa:* La API responde con un código de error HTTP (500 o 503) en formato texto/HTML en lugar de JSON debido a que el servicio Ollama no está en ejecución o la BD está inalcanzable.
 *Solución:* 
@@ -165,3 +170,5 @@ MOTOR_POR_DEFECTO=
 >     print(f"Error {r.status_code}: {r.text}")
 >     continue
 > datos = r.json()
+
+HELP! :"V
