@@ -1,4 +1,4 @@
-#INFORME TÉCNICO
+# INFORME TÉCNICO
 
 ## Caracterización del modelo local
 
@@ -13,47 +13,16 @@
 | RAM usada durante la inferencia | `free -h` mientras responde | **492 MiB** (WSL) / **6.6 GB (84%)** (Host Windows) |
 | Calidad percibida (1 a 5) | Su criterio, con una frase que lo justifique | **4 / 5** - Excelente tiempo de respuesta y bajo consumo de recursos, ideal para tareas livianas y equipos con hardware limitado. |
 
-## Arquitectura
+## Sección de pruebas
 
-## Seguridad
-
-### ¿Qué puertos se exponen y por qué?
-
-1. Puerto 5432: Expone la base de datos que se ejecuta dentro del contenedor.
-2. Puerto 8000: Expone automáticamente una página interactiva con la documentación de todos sus endpoints.
-3. Puerto 11434: Ollama descarga y ejecuta modelos de lenguaje en su propia máquina y los expone mediante una API REST.
-
-### ¿Qué roles existen en la Base de Datos y que puede hacer cada uno?
-
-Por seguridad, la aplicación nunca debe conectarse como administrador, por lo cual se crea un rol de APLICACIÓN con privilegios minimos:
-
-* Hacer inferencias y consultas en las BD.
-* No se conceden permisos de eliminación y actualización como son DELETE, UPDATE y DROP.
-
-### ¿Cómo se manejan los secretos?
-
-Al desplegar contenedores, pasar contraseñas directamente en la línea de comandos con -e POSTGRES_PASSWORD=... (como figura en el comando docker run) no es seguro, ya que la contraseña queda registrada en el historial de la terminal (history) y en la inspección del contenedor (docker inspect).
-
-#### Buenas prácticas para el manejo de secretos:
-
-1. Uso de archivos .env (Desarrollo local):
-
-* Guardar variables en un archivo .env excluido del control de versiones (.gitignore).
-* Pasar las variables a Docker mediante --env-file .env.
-
-2. Docker Secrets / PostgreSQL Secret Files (Producción):
-
-* Utilizar la variable POSTGRES_PASSWORD_FILE=/run/secrets/db_password.
-* El secreto se almacena en un archivo cifrado en el host y se monta dentro del contenedor en tiempo de ejecución, evitando que la clave aparezca en texto plano en la configuración del contenedor.
-
-3. Gestores de Secretos Externalizados:
-
-* En entornos cloud o clusters, integrarse con herramientas como HashiCorp Vault, AWS Secrets Manager o Azure Key Vault.
-
-### Gestión frente a un filtro de contraseñas
-
-1. Rotación inmediata de credenciales.
-2. Actualización de servicios/variables de entorno.
-3. Terminar conexiones activas sospechosas.
-4. Auditoría y revisión de logs.
-5. Mitigación de la fuente de filtración por medio de identificación de la causa y toma de medidas correctivas.
+| ID | Tipo | Qué se verifica | Resultado esperado | Obtenido | Estado |
+|---|---|---|---|---|---|
+| P-01 | Funcional | GET `/health` responde | Código 200 y estado ok | `200 OK` (`test_health_responde_ok`) | PASSED |
+| P-02 | Funcional | POST `/clasificar` con motor eco | Código 200 y tipo correcto | `200 OK` y tipo devuelto (`test_clasificar_eco_devuelve_tipo`) | PASSED |
+| P-03 | Funcional | Motor inválido | Código 400 | `400 Bad Request` (`test_clasificar_rechaza_motor_invalido`) | PASSED |
+| P-04 | Acceso | Rol `app_ia` intenta DROP TABLE | Error de permisos | `ERROR: must be owner of table inferencias` | PASSED |
+| P-05 | Conectividad | La API resuelve el host `db` | Devuelve una IP interna | Resuelve a IP interna `172.19.0.2` | PASSED |
+| P-06 | Disponibilidad | Reinicio del contenedor de BD | La API se recupera sola | Contenedor `db-ia` reiniciado y API responde `Healthy` | PASSED |
+| P-07 | Persistencia | `down` y `up` conservan los datos | Los registros siguen existiendo | Registros conservados tras recrear contenedores (`docker compose down / up`) | PASSED |
+| P-08 | Carga | 10 usuarios sobre el motor eco | p95 < 800 ms y errores < 5 % | `p95 = 56.6 ms` y `errores = 0.00%` (10 VUs en k6) | PASSED |
+| P-09 | Caracterización | 10 inferencias con modelo | Promedio, mediana y p95 | *Pendiente por ejecución (Ollama)* | PENDIENTE |
